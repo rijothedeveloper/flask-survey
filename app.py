@@ -24,4 +24,6 @@ def question(currPage):
 
 @app.route("/answer/<int:currPage>", methods=["POST"])
 def answer(currPage):
+    selected = request.form["selected"]
+    responses.append(selected)
     return redirect(f"/question/{currPage+1}")
