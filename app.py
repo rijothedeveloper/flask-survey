@@ -19,7 +19,7 @@ def home():
 @app.route("/question/<int:currPage>")
 def question(currPage):
     if len(surveys["satisfaction"].questions) <= currPage:
-        return render_template("thank-you.html")
+        return redirect("/thank-you")
     question = surveys["satisfaction"].questions[currPage].question
     option1 = surveys["satisfaction"].questions[currPage].choices[0]
     option2 = surveys["satisfaction"].questions[currPage].choices[1]
@@ -30,3 +30,7 @@ def answer(currPage):
     selected = request.form["selected"]
     responses.append(selected)
     return redirect(f"/question/{currPage+1}")
+
+@app.route("/thank-you")
+def thankYou():
+    return render_template("thank-you.html")
