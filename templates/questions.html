@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %} Answer question {% endblock %}
+
+{% block content%} 
+<h2>{{question}}</h2>
+
+<form action="/answer/{{currPage}}" method="post">
+<input type="radio" id={{option1}} name={{option1}} value={{option1}} >
+<label for={{option1}} >{{option1}}</label> <br>
+
+<input type="radio" id={{option2}} name={{option2}} value={{option2}} >
+<label for={{option2}} >{{option2}}</label> <br>
+
+<input type="submit" value="next">
+
+</form>
+
+{% endblock %}

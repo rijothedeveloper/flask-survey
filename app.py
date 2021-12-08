@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 from flask_debugtoolbar import DebugToolbarExtension
 from surveys import surveys
 
@@ -14,3 +14,14 @@ def home():
     title = surveys["satisfaction"].title
     instructions = surveys["satisfaction"].instructions
     return render_template("home.html", title=title, instructions=instructions)
+
+@app.route("/question/<int:currPage>")
+def question(currPage):
+    question = surveys["satisfaction"].questions[currPage].question
+    option1 = surveys["satisfaction"].questions[currPage].choices[0]
+    option2 = surveys["satisfaction"].questions[currPage].choices[1]
+    return render_template("questions.html",currPage=currPage, question=question, option1=option1, option2=option2)
+
+@app.route("/answer/<int:currPage>", methods=["POST"])
+def answer(currPage):
+    return redirect(f"/question/{currPage+1}")
