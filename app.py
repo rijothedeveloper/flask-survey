@@ -6,6 +6,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "MY-KEY"
 debug = DebugToolbarExtension(app)
 
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 responses = []
 
@@ -17,6 +18,8 @@ def home():
 
 @app.route("/question/<int:currPage>")
 def question(currPage):
+    if len(surveys["satisfaction"].questions) <= currPage:
+        return render_template("thank-you.html")
     question = surveys["satisfaction"].questions[currPage].question
     option1 = surveys["satisfaction"].questions[currPage].choices[0]
     option2 = surveys["satisfaction"].questions[currPage].choices[1]
