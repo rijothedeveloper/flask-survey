@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, flash
 from flask_debugtoolbar import DebugToolbarExtension
 from surveys import surveys
 
@@ -6,6 +6,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "MY-KEY"
 debug = DebugToolbarExtension(app)
 
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 
 responses = []
@@ -21,6 +22,8 @@ def question(currPage):
     if len(surveys["satisfaction"].questions) <= len(responses):
         return redirect("/thank-you")
     if len(responses) != currPage:
+        flash("do not try to cheat")
+        flash(f"redirected to question {len(responses)}")
         return redirect(f"/question/{len(responses)}")
     question = surveys["satisfaction"].questions[currPage].question
     option1 = surveys["satisfaction"].questions[currPage].choices[0]
