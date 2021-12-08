@@ -1,5 +1,6 @@
-from flask import Flask, request, render_template, redirect, flash
+from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
+from werkzeug.wrappers import response
 from surveys import surveys
 
 app = Flask(__name__)
@@ -8,17 +9,19 @@ debug = DebugToolbarExtension(app)
 
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
+#responses = []
 
-responses = []
 
 @app.route("/")
 def home():
     title = surveys["satisfaction"].title
     instructions = surveys["satisfaction"].instructions
+    # responses = session.get("answers", [])
     return render_template("home.html", title=title, instructions=instructions)
 
 @app.route("/question/<int:currPage>")
 def question(currPage):
+    responses = session.get("answers", [])
     if len(surveys["satisfaction"].questions) <= len(responses):
         return redirect("/thank-you")
     if len(responses) != currPage:
@@ -33,7 +36,9 @@ def question(currPage):
 @app.route("/answer/<int:currPage>", methods=["POST"])
 def answer(currPage):
     selected = request.form["selected"]
+    responses = session.get("answers", [])
     responses.append(selected)
+    session["answers"] = responses
     return redirect(f"/question/{currPage+1}")
 
 @app.route("/thank-you")
